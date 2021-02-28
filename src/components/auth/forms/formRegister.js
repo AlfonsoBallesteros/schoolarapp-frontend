@@ -1,13 +1,9 @@
 import React from 'react'
 
-export const HomeScreen = () => {
-    
+export const formRegister = () => {
     return (
-        
         <div>
-            <h1>Home</h1>
+            formulario register
         </div>
-
-
     )
 }

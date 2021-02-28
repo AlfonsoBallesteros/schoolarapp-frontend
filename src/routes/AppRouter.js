@@ -5,23 +5,28 @@ import {
     Route,
     Redirect
 } from 'react-router-dom';
-import { HomeScreen } from '../components/home/HomeScreen';
 import { AuthRouter } from './AuthRouter';
+import { RouterPrivate } from './RouterPrivate';
+import { RouterPublic } from './RouterPublic';
 export const AppRouter = () => {
     return (
         <Router>
             <div>
                 <Switch>
 
+                    
                     <Route
-                        exact
-                        path="/"
-                        component={HomeScreen}
+                        path="/matricula"
+                        component={RouterPrivate}
                     />
 
                     <Route
                         path="/auth"
                         component={AuthRouter}
+                    />
+                    <Route
+                        path="/"
+                        component={RouterPublic}
                     />
 
                     <Redirect to="/auth/login" />
