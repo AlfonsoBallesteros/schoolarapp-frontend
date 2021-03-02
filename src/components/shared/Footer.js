@@ -1,9 +1,9 @@
 import React from 'react'
 
-export const formLogin = () => {
+export const Footer = () => {
     return (
         <div>
-            formulario Login
+            footer
         </div>
     )
 }

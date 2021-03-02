@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { SchoolarApp } from './SchoolarApp'
+import { App } from './App';
+
 
 ReactDOM.render(
   <React.StrictMode>
-    <SchoolarApp />
+    <App />
   </React.StrictMode>,
   document.getElementById('root')
 );
-
