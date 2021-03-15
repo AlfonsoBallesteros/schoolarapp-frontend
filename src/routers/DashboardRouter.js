@@ -1,24 +1,23 @@
 import React from 'react'
 import {
-    BrowserRouter as Router,
+    Redirect,
     Route,
     Switch
-  } from "react-router-dom";
-import { mainListItems } from '../constants/listItems';
+} from "react-router-dom";
 
-const DashboardRouter = (props) => {
+// import DashboardLayout from '../layouts/DashboardLayout/DashboardLayout';
+import { Prueba } from '../pages/MatriculaAcademica/prueba';
+
+
+const DashboardRouter = () => {
 
     return (
-        <Router>
+        <>
             <Switch>
-            {
-                mainListItems.map(item => {
-                    const {component: Component, text, path} = item;
-                    return <Route key={text} path={path} component={Component}/>
-                })
-            }
+                <Route exact path="/dashboard" component={Prueba} />
+                <Redirect to="/dashboard" />
             </Switch>
-        </Router>
+        </>
     )
 }
 
