@@ -40,10 +40,11 @@ export const RegisterScreen = ({ types }) => {
         password: '',
         firstName: '',
         lastName: '',
-        SelecDoc: '6046f1729541a3474503e5f6',
-        NumDoc: '',
-        id: ''
+        SelecDoc: '6050104844a69191606c917b',
+        NumDoc: ''
     })
+
+    
 
     const handleChange = ({ target }) => {
         setValue({ ...value, [target.name]: target.value });
@@ -63,22 +64,38 @@ export const RegisterScreen = ({ types }) => {
             NumDoc: documentId
         } = value;
 
-        const data = {
-            name,
-            surname,
-            typeId,
-            documentId
-        }
+        
+
         try {
-            const res = await fetchSinToken('people', data, 'POST');
-                const {id} = await res.json();
-                console.log(id)
-       
+            const res = await fetchSinToken('people', {
+                name,
+                surname,
+                typeId,
+                documentId
+            }, 'POST');
+            const resJson = await res.json();
+            const {_id} = resJson;
+            console.log(_id)
+            
+            //user
+            const {username:login, password, firstName, lastName} = value
+            const data = {
+                login,
+                email: login,
+                firstName,
+                lastName,
+                password,
+                person: _id
+            }
+            console.log(data)
+            const res2 = await fetchSinToken('register', data , 'POST');
+            const resJs2 = await res2.json();
+            console.log(resJs2)
+
+
         } catch (error) {
             console.log(error)
         }
-
-
     }
 
 
@@ -158,7 +175,7 @@ export const RegisterScreen = ({ types }) => {
                             {
                                 types.map(
                                     select => {
-                                        return <MenuItem key={select.id} value={select.id}>{select.name}</MenuItem>
+                                        return <MenuItem key={select._id} value={select._id}>{select.name}</MenuItem>
                                     }
                                 )
                             }
