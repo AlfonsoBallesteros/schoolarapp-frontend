@@ -14,12 +14,14 @@ import { fetchSinToken } from '../../helpers/AuthFetch';
 
 
 
+
+
 const useStyles = makeStyles((theme) => ({
     root: {
         height: '100vh',
     },
     logo: {
-        backgroundColor: "#219653"
+        backgroundColor: URL("./assets/square.png")
     },
     paper: {
         margin: theme.spacing(0, 4),
@@ -28,6 +30,11 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'center',
 
     },
+    img: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+    }
 }));
 
 export const AuthScreen = () => {
@@ -62,19 +69,21 @@ export const AuthScreen = () => {
     return (
         <Grid container component="main" className={classes.root}>
             <CssBaseline />
-            <Grid item xs={false} sm={6} md={8} className={classes.logo} />
+            <Grid item xs={false} sm={6} md={8} className={classes.logo, classes.img} >
+                <img  src="./assets/img/tecnico-logo.png" /><br></br>
+            </Grid>
             <Grid item xs={12} sm={6} md={4} component={Paper} elevation={6} square>
-                <div style={{padding: "30px"}}>
-                    Bandera
+                <br></br><div className={classes.img}>
+                    <img  src="./assets/img/logo.png" /><br></br>
                 </div>
-                <AppBar position="static" style={{ borderTopLeftRadius: "10px", borderTopRightRadius: "10px" }}>
+                <AppBar position="static" style={{ borderTopLeftRadius: "10px", borderTopRightRadius: "10px"}}>
                     <Tabs value={value} onChange={handleTabs} indicatorColor="primary" centered>
                         <Tab label="Iniciar Sesion" />
                         <Tab label="Registrarse" />
                     </Tabs>
                 </AppBar>
 
-                <div>
+                <div><br></br>
                     <div className={classes.paper}>
                         <Typography component="h1" variant="h5">
                             Modúlo de Matriculas
