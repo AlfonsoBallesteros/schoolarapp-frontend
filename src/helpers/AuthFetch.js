@@ -1,5 +1,5 @@
 const URL = 'https://schoolarapp-usco.herokuapp.com/api';
-//const URL = 'http://192.168.1.25:8081/api';
+// const URL = 'http://192.168.1.25:8081/api';
 
 const fetchSinToken = ( endpoint, data, method = 'GET' ) => {
 

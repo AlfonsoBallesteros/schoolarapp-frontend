@@ -43,7 +43,7 @@ const Header = (props) => {
                 <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
                     Dashboard
                     </Typography>
-                <Button onClick={logout}>
+                <Button className={classes.button} onClick={logout}>
                     Logout
                 </Button>
             </Toolbar>
