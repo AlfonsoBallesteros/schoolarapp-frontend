@@ -4,6 +4,7 @@ import {
     Switch
 } from "react-router-dom";
 import { AuthScreen } from '../components/Auth/AuthScreen';
+import { ValidateScreen } from '../components/Auth/ValidateScreen';
 import { Context } from '../context/Auth/AuthContext';
 
 import DashboardRouter from './DashboardRouter';
@@ -21,6 +22,7 @@ export const AppRouter = () => {
 
                 <Switch>
                     <PublicRoute exact isAuthenticated={logged} path="/auth" component={AuthScreen} />
+                    <PublicRoute exact isAuthenticated={logged} path="/auth/:token" component={ValidateScreen} />
                     <PrivateRoute isAuthenticated={logged} path="/" component={DashboardRouter} />
                 </Switch>
 
