@@ -1,10 +1,15 @@
 import React from 'react'
+import { Fab } from '@material-ui/core';
 
 const Matricula = () => {
     return (
-        <div>
-            <h1>esta es la pagina de matricula de daniela sanmiguel</h1>
-        </div>
+        <>
+            <h1>Modulo de Matrículas</h1>
+            <p>Copy
+            Hola, Juana García. Bienvenido al módulo de MATRÍCULA ACADÉMICAS.
+              Aquí podrá iniciar o consultar el estado de la matrícula. El proceso de matrícula consta de 3 pasos.</p>
+           
+        </>
     )
 }
 
