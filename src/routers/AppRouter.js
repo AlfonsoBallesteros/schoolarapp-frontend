@@ -10,6 +10,7 @@ import { Context } from '../context/Auth/AuthContext';
 import DashboardRouter from './DashboardRouter';
 import { PrivateRoute } from './PrivateRoute';
 import { PublicRoute } from './PublicRoute';
+import Matricula from './../pages/MatriculaAcademica/Matricula';
 
 export const AppRouter = () => {
 

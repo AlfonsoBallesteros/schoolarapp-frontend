@@ -111,7 +111,6 @@ const DatosMatricula = () => {
 
                         </Grid>
                         <Grid item xs={12} sm={3} className={classes.gridInput}>
-                        <img src="https://www.figma.com/file/LaFM8jpiLfBBZ6O7zZw1VP/SchoolarApp?node-id=1190%3A8815"/>
                         </Grid>
                     </Grid>
                 </div>

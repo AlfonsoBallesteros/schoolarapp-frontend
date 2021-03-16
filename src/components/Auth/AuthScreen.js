@@ -49,7 +49,7 @@ export const AuthScreen = () => {
 
     const handleSelect = async () => {
         try {
-            const res = await fetchSinToken('references/6050104844a69191606c9178');
+            const res = await fetchSinToken('references/6050191c3c492300152684b0');
             const resjson = await res.json();
             setSelect(resjson)
         } catch (error) {

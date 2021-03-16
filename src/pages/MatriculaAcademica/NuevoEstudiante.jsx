@@ -42,6 +42,7 @@ const useStyles = makeStyles((theme) => ({
   }
 
 export const NuevoEstudiante = () => {
+  
     const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
