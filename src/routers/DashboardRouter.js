@@ -4,20 +4,22 @@ import {
     Route,
     Switch
 } from "react-router-dom";
+import DashboardLayout from '../layouts/DashboardLayout/DashboardLayout';
 
-// import DashboardLayout from '../layouts/DashboardLayout/DashboardLayout';
-import { Prueba } from '../pages/MatriculaAcademica/prueba';
-import DashboardLayout from './../layouts/DashboardLayout/DashboardLayout';
+import { NuevoEstudiante } from '../pages/MatriculaAcademica/NuevoEstudiante';
+
 
 
 const DashboardRouter = () => {
 
     return (
         <>
-            <Switch>
-                <Route exact path="/dashboard" component={Prueba} />
-                <Redirect to="/dashboard" />
-            </Switch>
+            <DashboardLayout>
+                <Switch>
+                    <Route exact path="/dashboard" component={NuevoEstudiante} />
+                    <Redirect to="/dashboard" />
+                </Switch>
+            </DashboardLayout>
 
         </>
     )

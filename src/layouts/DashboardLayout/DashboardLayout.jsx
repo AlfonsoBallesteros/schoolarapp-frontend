@@ -4,15 +4,16 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
 import { useState } from 'react';
 import CopyRight from '../../components/CopyRight/CopyRight';
-import Chart from '../../components/Chart'
+
 import Header from '../../components/Header/Header';
 import SideBar from '../../components/SideBar/SideBar';
-import DashboardRouter from '../../routers/DashboardRouter';
 
-const DashboardLayout = () => {
+
+
+
+const DashboardLayout = ({children}) => {
     const classes = useStyles();
 
     const [open, setOpen] = useState(true);
@@ -40,10 +41,7 @@ const DashboardLayout = () => {
                     <Grid container spacing={3}>
                         {/* Formularios */}
                         <Grid item xs={12} md={8} lg={9}>
-                            {/* <Paper className={fixedHeightPaper}>
-                                <Chart/>
-                            </Paper> */}
-                            <DashboardRouter/>
+                            {children}
                         </Grid>
                     </Grid>
                     <Box pt={4}>

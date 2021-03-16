@@ -1,21 +1,32 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import Badge from '@material-ui/core/Badge';
-import NotificationsIcon from '@material-ui/icons/Notifications';
+import { Button } from '@material-ui/core'
 import classNames from 'classnames';
 import { useStyles } from '../../layouts/DashboardLayout/styles';
 
+
+import { Context } from '../../context/Auth/AuthContext';
+import { AuthTypes } from '../../types/AuthTypes';
+
 const Header = (props) => {
-    const { 
+
+    const {dispatch} = useContext(Context);
+    const {
         open,
         handleDrawerOpen,
         ...rest
     } = props;
     const classes = useStyles();
+
+    const logout = () => {
+        dispatch({
+            type: AuthTypes.logout
+        })
+    }
 
     return (
         <AppBar position="absolute" className={classNames(classes.appBar, open && classes.appBarShift)} {...rest}>
@@ -32,11 +43,9 @@ const Header = (props) => {
                 <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
                     Dashboard
                     </Typography>
-                <IconButton color="inherit">
-                    <Badge badgeContent={4} color="secondary">
-                        <NotificationsIcon />
-                    </Badge>
-                </IconButton>
+                <Button onClick={logout}>
+                    Logout
+                </Button>
             </Toolbar>
         </AppBar>
     )
