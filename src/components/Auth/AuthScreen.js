@@ -11,17 +11,13 @@ import { RegisterScreen } from './RegisterScreen'
 import { fetchSinToken } from '../../helpers/AuthFetch';
 
 
-
-
-
-
-
 const useStyles = makeStyles((theme) => ({
     root: {
         height: '100vh',
     },
-    logo: {
-        backgroundColor: URL("./assets/square.png")
+    background: {
+        backgroundImage: `url(${"./assets/img/Square.png"})`,
+        height: '100vh',
     },
     paper: {
         margin: theme.spacing(0, 4),
@@ -34,13 +30,20 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        paddingTop: 10,
+    },
+    logo: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        paddingTop: 150,
     }
 }));
 
 export const AuthScreen = () => {
 
-    
-    const [{types}, setSelect] = useState({
+
+    const [{ types }, setSelect] = useState({
         types: []
     })
 
@@ -52,7 +55,7 @@ export const AuthScreen = () => {
         } catch (error) {
             console.log(error)
         }
-         
+
     }
 
     useEffect(() => {
@@ -67,19 +70,19 @@ export const AuthScreen = () => {
     }
 
     return (
-        <Grid container component="main" className={classes.root}>
-            <CssBaseline />
-            <Grid item xs={false} sm={6} md={8} className={classes.logo, classes.img} >
-                <img  src="./assets/img/tecnico-logo.png" /><br></br>
+        <Grid container component="main" className={classes.root, classes.background}>
+            <CssBaseline/>
+            <Grid item xs={false} sm={6} md={8} className={classes.logo} >
+                <img src="./assets/img/tecnico-logo.png" />
             </Grid>
             <Grid item xs={12} sm={6} md={4} component={Paper} elevation={6} square>
                 <br></br><div className={classes.img}>
-                    <img  src="./assets/img/logo.png" /><br></br>
+                    <img src="./assets/img/logo.png" /><br></br>
                 </div>
-                <AppBar position="static" style={{ borderTopLeftRadius: "10px", borderTopRightRadius: "10px"}}>
+                <AppBar position="static" style={{ borderTopLeftRadius: "10px", borderTopRightRadius: "10px" }}>
                     <Tabs value={value} onChange={handleTabs} indicatorColor="primary" centered>
-                        <Tab label="Iniciar Sesion" />
-                        <Tab label="Registrarse" />
+                        <Tab label="Ingreso" />
+                        <Tab label="Registro" />
                     </Tabs>
                 </AppBar>
 
@@ -87,19 +90,18 @@ export const AuthScreen = () => {
                     <div className={classes.paper}>
                         <Typography component="h1" variant="h5">
                             Modúlo de Matriculas
-                    </Typography>
+                         </Typography>
+                         <p>Ingrese con su nombre de usuario.</p>
 
                     </div>
                     <div className={classes.paper}>
                         {
                             (value === 0)
                                 ? <LoginScreen />
-                                : <RegisterScreen types={types}/>
+                                : <RegisterScreen types={types} />
                         }
                     </div>
                 </div>
-
-
             </Grid>
         </Grid>
     )

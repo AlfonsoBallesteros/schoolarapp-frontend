@@ -14,13 +14,10 @@ const DashboardRouter = () => {
 
     return (
         <>
-            <DashboardLayout>
                 <Switch>
                     <Route exact path="/dashboard" component={Prueba} />
                     <Redirect to="/dashboard" />
                 </Switch>
-            </DashboardLayout>
-
         </>
     )
 }
