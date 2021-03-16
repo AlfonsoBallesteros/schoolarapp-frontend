@@ -41,7 +41,7 @@ export const RegisterScreen = ({ types }) => {
         password: '',
         firstName: '',
         lastName: '',
-        SelecDoc: '6050104844a69191606c917b',
+        SelecDoc: '6050191c3c492300152684b3',
         NumDoc: ''
     })
 
