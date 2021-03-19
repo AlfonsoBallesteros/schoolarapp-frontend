@@ -1,0 +1,6 @@
+
+.MuiGrid-grid-lg-9 {
+    flex-grow: 0;
+    max-width: 100% !important;
+    flex-basis: 100% !important;
+}
