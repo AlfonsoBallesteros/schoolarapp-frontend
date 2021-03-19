@@ -10,12 +10,14 @@ import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import { fetchSinToken } from '../../helpers/AuthFetch';
+import Swal from 'sweetalert2';
+import { useHistory } from 'react-router';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -31,10 +33,27 @@ const useStyles = makeStyles((theme) => ({
 
 export const RegisterScreen = ({ types }) => {
 
-
+    const history = useHistory()
 
 
     const classes = useStyles();
+    const [errors, seterrors] = useState({})
+    const [loading, setloading] = useState(false)
+
+    const validate = () => {
+        let temp = {};
+        temp.username = (/^[^@]+@[^@]+\.[a-zA-Z]{2,}$/).test(value.username) ? "" : "Email requerido";
+        temp.password = (/^(?=.*\d)(?=.*[\u0021-\u002b\u003c-\u0040])(?=.*[A-Z])(?=.*[a-z])\S{7,20}$/).test(value.password) ? "" : "La contraseña debe tener al menos entre 7 y 20 caracteres, un dígito numerico, una minúscula, una mayúscula y un caracter no alfanumérico";
+        temp.firstName = (value.firstName).length > 2 ? "" : "Primer nombre requerido"
+        temp.lastName = (value.lastName).length > 2 ? "" : "Primer apellido requerido"
+        temp.NumDoc = (/^\d+\S{7,20}$/).test(value.NumDoc) ? "" : "Documento de identidad invalido";
+
+
+        seterrors({
+            ...temp
+        })
+        return Object.values(temp).every(x => x == "")
+    }
 
     const [value, setValue] = useState({
         username: '',
@@ -45,7 +64,7 @@ export const RegisterScreen = ({ types }) => {
         NumDoc: ''
     })
 
-    
+
 
     const handleChange = ({ target }) => {
         setValue({ ...value, [target.name]: target.value });
@@ -57,46 +76,76 @@ export const RegisterScreen = ({ types }) => {
     const hanldeSubmit = async (e) => {
         e.preventDefault();
 
-        //enviar person
-        const {
-            firstName: name,
-            lastName: surname,
-            SelecDoc: typeId,
-            NumDoc: documentId
-        } = value;
+        if (validate()) {
+            setloading(true)
+            //enviar person
+            const {
+                firstName: name,
+                lastName: surname,
+                SelecDoc: typeId,
+                NumDoc: documentId
+            } = value;
 
-        
+            try {
+                const res = await fetchSinToken('people', {
+                    name,
+                    surname,
+                    typeId,
+                    documentId
+                }, 'POST');
+                const resJson = await res.json();
+                if (res.status == 400) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: resJson.message,
+                        confirmButtonColor: "#219653"
+                    })
+                }
+                const { _id } = resJson;
 
-        try {
-            const res = await fetchSinToken('people', {
-                name,
-                surname,
-                typeId,
-                documentId
-            }, 'POST');
-            const resJson = await res.json();
-            const {_id} = resJson;
-            console.log(_id)
-            
-            //user
-            const {username:login, password, firstName, lastName} = value
-            const data = {
-                login,
-                email: login,
-                firstName,
-                lastName,
-                password,
-                person: _id
+                //user
+                const { username: login, password, firstName, lastName } = value
+                const data = {
+                    login,
+                    email: login,
+                    firstName,
+                    lastName,
+                    password,
+                    person: _id
+                }
+                const res2 = await fetchSinToken('register', data, 'POST');
+                const resJs2 = await res2.json();
+
+                if (res2.status == 400) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: resJs2.message,
+                        confirmButtonColor: "#219653"
+                    })
+                }
+
+                if(res.ok || res2.ok){
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Estudiante Registrado',
+                        text: "Porfavor verifique su correo para activar su cuenta ",
+                        confirmButtonColor: "#219653"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            history.replace('/auth')
+                        }
+                    })
+
+                }
+                setloading(false)
+
+            } catch (error) {
+                console.log(error)
             }
-            console.log(data)
-            const res2 = await fetchSinToken('register', data , 'POST');
-            const resJs2 = await res2.json();
-            console.log(resJs2)
-
-
-        } catch (error) {
-            console.log(error)
         }
+
     }
 
 
@@ -108,6 +157,7 @@ export const RegisterScreen = ({ types }) => {
                         variant="outlined"
                         margin="normal"
                         required
+                        {...(errors.username && { error: true, helperText: errors.username })}
                         onChange={handleChange}
                         fullWidth
                         id="email"
@@ -122,6 +172,7 @@ export const RegisterScreen = ({ types }) => {
                         required
                         fullWidth
                         onChange={handleChange}
+                        {...(errors.password && { error: true, helperText: errors.password })}
                         name="password"
                         label="Contraseña"
                         value={value.password}
@@ -146,6 +197,7 @@ export const RegisterScreen = ({ types }) => {
                         variant="outlined"
                         margin="normal"
                         required
+                        {...(errors.firstName && { error: true, helperText: errors.firstName })}
                         onChange={handleChange}
                         fullWidth
                         id="firstName"
@@ -157,6 +209,7 @@ export const RegisterScreen = ({ types }) => {
                         variant="outlined"
                         margin="normal"
                         required
+                        {...(errors.lastName && { error: true, helperText: errors.lastName })}
                         onChange={handleChange}
                         fullWidth
                         id="lastName"
@@ -188,6 +241,7 @@ export const RegisterScreen = ({ types }) => {
                         variant="outlined"
                         margin="normal"
                         required
+                        {...(errors.NumDoc && { error: true, helperText: errors.NumDoc })}
                         onChange={handleChange}
                         fullWidth
                         id="NumDoc"
@@ -201,14 +255,19 @@ export const RegisterScreen = ({ types }) => {
                         label="Acepto política de tratamiento de datos"
                     />
                     <Grid container direction="row" justify="center" alignItems="center">
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                            className={classes.submit}
-                        >
-                            Crear Cuenta
-                            </Button>
+                        {
+                            (!loading)
+                                ? <Button
+                                    type="submit"
+                                    variant="contained"
+                                    color="primary"
+                                    className={classes.submit}
+                                >
+                                    Crear Cuenta
+                                </Button>
+                                : <CircularProgress color="primary" />
+                        }
+
                     </Grid>
 
                 </form>

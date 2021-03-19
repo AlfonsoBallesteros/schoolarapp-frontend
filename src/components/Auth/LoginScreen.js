@@ -5,9 +5,7 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Button from '@material-ui/core/Button';
@@ -15,7 +13,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { fetchSinToken } from '../../helpers/AuthFetch';
 import { Context } from '../../context/Auth/AuthContext';
 import { AuthTypes } from '../../types/AuthTypes';
-
+import Swal from 'sweetalert2';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
     form: {
@@ -35,11 +34,25 @@ export const LoginScreen = () => {
 
     const classes = useStyles();
 
+    const [loading, setloading] = useState(false)
+    const [errors, seterrors] = useState({})
     const [value, setValue] = useState({
         username: '',
         password: '',
-        showPassword: false
+        showPassword: false,
+        loading: false
     })
+
+    const validate = () => {
+        let temp = {};
+        temp.username = (/^[^@]+@[^@]+\.[a-zA-Z]{2,}$/).test(value.username) ? "" : "Email requerido";
+        temp.password = value.password ? "" : "Contraseña requerida";
+
+        seterrors({
+            ...temp
+        })
+        return Object.values(temp).every(x => x == "")
+    }
 
     const handleChange = ({ target }) => {
         setValue({ ...value, [target.name]: target.value });
@@ -48,26 +61,36 @@ export const LoginScreen = () => {
         setValue({ ...value, showPassword: !value.showPassword })
     }
 
-    const hanldeSubmit = (e) => {
+    const hanldeSubmit = async (e) => {
+        
         e.preventDefault();
-
-        fetchSinToken('authenticate', value, 'POST')
-            .then(res => {
-                if (res.ok) {
-                    return res.json();
+        if (validate()) {
+            setloading(true)
+            try {
+                let res = await fetchSinToken('authenticate', value, 'POST');
+                let resJ = await res.json();
+                if (res.status == 400) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: resJ.message,
+                        confirmButtonColor: "#219653"
+                    })
+                    
                 }
-                throw res;
-            })
-            .then(resJson => {
-                dispatch({
-                    type: AuthTypes.login,
-                    payload: resJson
-                })
-            })
-            .catch(error => {
-                
-                console.error(error)
-            });
+
+                if(resJ.id_token){
+                    dispatch({
+                        type: AuthTypes.login,
+                        payload: resJ
+                    })
+                }        
+                setloading(false)
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
     }
 
 
@@ -77,14 +100,12 @@ export const LoginScreen = () => {
                 <TextField
                     variant="outlined"
                     margin="normal"
-                    required
                     onChange={handleChange}
                     fullWidth
-                    id="email"
                     label="Email"
                     name="username"
-                    autoComplete="email"
                     autoFocus
+                    {...(errors.username && { error: true, helperText: errors.username })}
                 />
                 <TextField
                     variant="outlined"
@@ -92,6 +113,7 @@ export const LoginScreen = () => {
                     required
                     fullWidth
                     onChange={handleChange}
+                    {...(errors.password && { error: true, helperText: errors.password })}
                     name="password"
                     label="Contraseña"
                     value={value.password}
@@ -117,23 +139,28 @@ export const LoginScreen = () => {
                     label="Recordarme"
                 />
                 <Grid container direction="row" justify="center" alignItems="center">
-                    <Button
-                        type="submit"
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                    >
-                        Iniciar Sesion
+                    {
+                        (!loading)
+                            ? <Button
+                                type="submit"
+                                variant="contained"
+                                color="primary"
+                                className={classes.submit}
+                            >
+                                Iniciar Sesion
                             </Button>
+                            : <CircularProgress color="primary" />
+                    }
+
                 </Grid>
 
-                <Grid container direction="row" justify="center" alignItems="center">
+                {/* <Grid container direction="row" justify="center" alignItems="center">
                     <Typography variant="body2">
                         ¿Olvidó su contraseña? <Link href="#" variant="body2">
                             Reestrablecer </Link>
                     </Typography>
 
-                </Grid>
+                </Grid> */}
             </form>
         </div>
     )
