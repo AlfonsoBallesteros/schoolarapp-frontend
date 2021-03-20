@@ -1,6 +1,13 @@
 import { AuthTypes } from "../../types/AuthTypes";
 
-
+// ---------
+// ACTION CREATORS
+export const actionCreators = {
+    setUser: (payload) => ({
+        type: AuthTypes.SET_USER,
+        payload
+    })
+}
 
 export const authReducer = (state = {}, action) => {
     switch (action.type) {
@@ -16,6 +23,9 @@ export const authReducer = (state = {}, action) => {
                 return {
                     logged: false
                 }
+        case AuthTypes.SET_USER:
+            return {...state, user: action.payload}
+
         default:
             return state;
     }

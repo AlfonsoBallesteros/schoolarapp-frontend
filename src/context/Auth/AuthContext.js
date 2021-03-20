@@ -1,13 +1,16 @@
-import React, { createContext, useReducer, useEffect } from 'react'
+import React, { createContext, useContext, useReducer, useEffect } from 'react'
 import { authReducer } from './AuthReducer';
 
 export const Context = createContext();
 const init = () => {
     return JSON.parse(localStorage.getItem('Authorization')) || {
         logged: false,
-        token: ''
+        token: '',
+        user: {}
     }
 }
+
+
 
 export const AuthContext = ({ children }) => {
 
@@ -25,3 +28,5 @@ export const AuthContext = ({ children }) => {
         </Context.Provider>
     )
 }
+
+export const useAuthContext = () => useContext(Context);

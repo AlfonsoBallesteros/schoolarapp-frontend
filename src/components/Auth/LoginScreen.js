@@ -10,11 +10,12 @@ import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-import { fetchSinToken } from '../../helpers/AuthFetch';
-import { Context } from '../../context/Auth/AuthContext';
+import { fetchConToken, fetchSinToken } from '../../helpers/AuthFetch';
 import { AuthTypes } from '../../types/AuthTypes';
 import Swal from 'sweetalert2';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { actionCreators } from './../../context/Auth/AuthReducer';
+import { useAuthContext } from './../../context/Auth/AuthContext';
 
 const useStyles = makeStyles((theme) => ({
     form: {
@@ -29,8 +30,9 @@ const useStyles = makeStyles((theme) => ({
 
 
 export const LoginScreen = () => {
+    console.log('LoginScreen');
 
-    const { dispatch } = useContext(Context);
+    const { dispatch } = useAuthContext();
 
     const classes = useStyles();
 
@@ -62,7 +64,7 @@ export const LoginScreen = () => {
     }
 
     const hanldeSubmit = async (e) => {
-        
+        console.log('authenticate')
         e.preventDefault();
         if (validate()) {
             setloading(true)
@@ -78,12 +80,16 @@ export const LoginScreen = () => {
                     })
                     
                 }
-
+                console.log('authenticate', resJ);
                 if(resJ.id_token){
                     dispatch({
                         type: AuthTypes.login,
                         payload: resJ
-                    })
+                    });
+                    const respUser = await fetchConToken('account', {});
+                    console.log(respUser);
+                    const user = await respUser.json();
+                    dispatch(actionCreators.setUser(user))
                 }        
                 setloading(false)
             } catch (error) {
