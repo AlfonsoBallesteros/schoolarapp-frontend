@@ -89,6 +89,7 @@ export const LoginScreen = () => {
                     const respUser = await fetchConToken('account', {});
                     console.log(respUser);
                     const user = await respUser.json();
+                    console.log('response USER', user)
                     dispatch(actionCreators.setUser(user))
                 }        
                 setloading(false)

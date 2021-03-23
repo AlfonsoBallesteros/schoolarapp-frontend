@@ -19,7 +19,7 @@ const MatriculaContext = (props) => {
         dirección: '',
         ciudadResidencia: '',
         nacionalidad: '',
-        rh: '6050191c3c492300152684a8',
+        rh: '',
         eps: '',
         numeroTelefono: '',
         enfermedad: false,

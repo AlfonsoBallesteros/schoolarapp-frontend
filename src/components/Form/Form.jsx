@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
@@ -13,11 +13,14 @@ import InputLabel from '@material-ui/core/InputLabel';
 import { Button } from '@material-ui/core';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import './form.css'
-import { fetchConToken } from '../../helpers/AuthFetch';
+import { fetchConToken, fetchSinToken } from '../../helpers/AuthFetch';
 import Swal from 'sweetalert2';
 import { Label } from 'recharts';
 import { useMatriculaContext } from './../../context/Matricula/MatriculaContext';
 import { useAuthContext } from './../../context/Auth/AuthContext';
+
+
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -40,15 +43,56 @@ const useStyles = makeStyles((theme) => ({
 export const Form = () => {
 
   const state = useMatriculaContext();
-  const {value, setInputValue} = state;
+  const { value, setInputValue } = state;
   const { Authorization: { user } } = useAuthContext();
+  const [listiIdentity, setListIdentity] = useState([]);
+  const [listRh, setListRh] = useState([]);
+  const [listGenero, setListGenero] = useState([]);
+  const [error, setError]= useState({})
   //didMount
   useEffect(() => {
+    console.log(user)
     setInputValue({
-      ...state, nombre: user.firstName
+      ...value, nombre: user.firstName, apellidos: user.lastName, tipoIdentificacion: user.SelecDoc, numIdentificación: user.NumDoc,
     })
+    getListIdentity()
+    getListRh()
+    getListGenero()
   }, [])
+  console.log(value)
 
+  const getListIdentity = async () => {
+    try {
+      const res = await fetchSinToken('references/6050191c3c492300152684b0');
+      const resjson = await res.json();
+      console.log(resjson)
+      setListIdentity(resjson.types)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const getListRh = async () =>{
+    try {
+      const res = await fetchSinToken('references/6050191c3c492300152684a8');
+      const resjson = await res.json();
+      console.log(resjson)
+      setListRh(resjson.types)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const getListGenero = async () =>{
+    try {
+      const res = await fetchSinToken('references/6050191c3c492300152684d5');
+      const resjson = await res.json();
+      console.log(resjson)
+      setListGenero(resjson.types)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const classes = useStyles();
 
@@ -58,10 +102,18 @@ export const Form = () => {
   /* const {nombre, apellidos, tipoIdentificacion, numeroTelefono, numIdentificación, fechaNacimiento, 
        ciudadNacimiento,genero, numeroTelefono, nuCelular, comuna, barrio, estrato, dirección, ciudadResidencia, nacionalidad,
        rh, eps, numeroTelefono, enfermedad, Discapacidad} = value */
-    
+
   const handleSubmit = async (e) => {
+
     console.log("handleSubmit", e)
     e.preventDefault();
+    const {error, ...sinError} = state
+    const result = validate(sinError)
+    if(Object.keys(result)){
+      setError({error : result})
+    }
+
+    
 
     const {
       nombre: name,
@@ -103,6 +155,8 @@ export const Form = () => {
         disease,
         disability
 
+
+
       }, 'POST');
       const resJson = await res.json();
 
@@ -123,6 +177,7 @@ export const Form = () => {
                 <p>Ingrese o actualice los datos personales correspondientes al estudiante</p>
                 <Grid className={classes.gridInput} item xs={12}>
                   <TextField
+                    disabled
                     name="nombre"
                     fullWidth
                     id="nombre"
@@ -133,6 +188,7 @@ export const Form = () => {
                 </Grid><br></br>
                 <Grid className={classes.gridInput} item xs={12}>
                   <TextField
+                    disabled
                     name="apellidos"
                     fullWidth
                     id="apellidos"
@@ -152,18 +208,18 @@ export const Form = () => {
                       value={value.tipoIdentificacion}
                       label="Documento de Identidad"
                     >
-                      <MenuItem value={10}>Registro Civil</MenuItem>
-                      <MenuItem value={20}>Tarjeta de identidad</MenuItem>
-                      <MenuItem value={30}>Cedula de ciudadania</MenuItem>
-
+                      {listiIdentity.map((identity) => (
+                        <MenuItem key={identity._id} value={identity._id}>{`${identity.value} - ${identity.name}`}</MenuItem>
+                      ))}
                     </Select>
                   </FormControl>
                 </Grid><br></br>
                 <Grid className={classes.gridInput} item xs={12}>
                   <TextField fullWidth
+                    disabled
                     name="numIdentificación"
                     id="numIdentificación"
-                    label="Número de identificación *"
+                    label="1003801214"
                     variant="outlined"
                     onChange={handleChange}
                     value={value.numIdentificación} />
@@ -201,8 +257,10 @@ export const Form = () => {
                       name="genero"
                       id="genero"
                     >
-                      <MenuItem value={10}>Masculino</MenuItem>
-                      <MenuItem value={20}>Femenino</MenuItem>
+                   
+                    {listGenero.map((genero) => (
+                      <MenuItem key={genero._id} value={genero._id}>{` ${genero.name}`}</MenuItem>
+                    ))}
                     </Select>
                   </FormControl>
                 </Grid><br></br>
@@ -300,10 +358,9 @@ export const Form = () => {
                       onChange={handleChange}
                       value={value.rh}
                     >
-                      <MenuItem value={10}>A+</MenuItem>
-                      <MenuItem value={20}>O+</MenuItem>
-                      <MenuItem value={30}>AB -</MenuItem>
-                      <MenuItem value={30}>AB +</MenuItem>
+                    {listRh.map((rh) => (
+                      <MenuItem key={rh._id} value={rh._id}>{`${rh.value} - ${rh.name}`}</MenuItem>
+                    ))}
 
                     </Select>
                   </FormControl>
@@ -358,3 +415,4 @@ export const Form = () => {
     </>
   )
 }
+

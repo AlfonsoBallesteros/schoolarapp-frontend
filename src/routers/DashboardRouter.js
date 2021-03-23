@@ -4,7 +4,7 @@ import {
     Route,
     Switch
 } from "react-router-dom";
-import DatosMatricula from '../components/Form/DatosMatricula';
+import MatriculaContext from '../context/Matricula/MatriculaContext';
 import DashboardLayout from '../layouts/DashboardLayout/DashboardLayout';
 
 import { NuevoEstudiante } from '../pages/MatriculaAcademica/NuevoEstudiante';
@@ -19,7 +19,13 @@ const DashboardRouter = () => {
             <DashboardLayout>
                 <Switch>
                     <Route exact path="/dashboard" component={Matricula} />
-                    <Route exact path="/dashboard/new" component={NuevoEstudiante} />
+                    
+                    <Route exact path="/dashboard/new" render={(props) => (
+                        <MatriculaContext>
+                            <NuevoEstudiante {...props}/>
+                        </MatriculaContext>
+                    )} />
+                    
                     <Redirect to="/dashboard" />
                 </Switch>
             </DashboardLayout>

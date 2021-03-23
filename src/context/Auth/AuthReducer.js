@@ -1,4 +1,4 @@
-import { AuthTypes } from "../../types/AuthTypes";
+ import { AuthTypes } from "../../types/AuthTypes";
 
 // ---------
 // ACTION CREATORS

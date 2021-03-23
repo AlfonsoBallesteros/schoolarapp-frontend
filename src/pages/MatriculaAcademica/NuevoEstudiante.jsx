@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -8,7 +8,9 @@ import Typography from '@material-ui/core/Typography';
 import { Form } from './../../components/Form/Form';
 import Container from '@material-ui/core/Container';
 import DatosMatricula from '../../components/Form/DatosMatricula';
-import MatriculaContext from '../../context/Matricula/MatriculaContext';
+import MatriculaContext, { useMatriculaContext } from '../../context/Matricula/MatriculaContext';
+import Matricula from './Matricula';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,7 +44,7 @@ function getStepContent(stepIndex) {
   }
 }
 
-export const NuevoEstudiante = () => {
+export const NuevoEstudiante = ({ loading }) => {
 
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
@@ -79,9 +81,7 @@ export const NuevoEstudiante = () => {
           ) : (
             <div>
               <Typography className={classes.instructions}>
-                <MatriculaContext>
-                  {getStepContent(activeStep)}
-                </MatriculaContext>
+                {getStepContent(activeStep)}
               </Typography>
               <div>
                 <Button

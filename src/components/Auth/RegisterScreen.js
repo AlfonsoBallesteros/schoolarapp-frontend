@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const RegisterScreen = ({ types }) => {
+export const RegisterScreen = ({types} ) => {
 
     const history = useHistory()
 
@@ -77,7 +77,7 @@ export const RegisterScreen = ({ types }) => {
         e.preventDefault();
 
         if (validate()) {
-            setloading(true)
+            setloading(true);
             //enviar person
             const {
                 firstName: name,

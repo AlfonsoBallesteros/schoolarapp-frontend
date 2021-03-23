@@ -12,6 +12,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import { Button } from '@material-ui/core';
 import { useHistory } from 'react-router';
 
+
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -26,10 +27,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Matricula = () => {
+ 
 
-    const [value, setInputValue] = useState({});
+   /*  const [value, setInputValue] = useState({}); */
     const classes = useStyles();
-    const history = useHistory()
+    const history = useHistory();
+
+
     const handleNew = () => {
         history.replace('/dashboard/new')
     }
