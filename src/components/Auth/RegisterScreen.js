@@ -18,6 +18,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import { fetchSinToken } from '../../helpers/AuthFetch';
 import Swal from 'sweetalert2';
 import { useHistory } from 'react-router';
+import { Link } from '@material-ui/core';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -280,9 +281,12 @@ export const RegisterScreen = ({ types }) => {
                                 color="primary"
                             />
                         }
-                        label="Acepto política de tratamiento de datos"
+                        label={
+                            <Link href="https://storage.googleapis.com/schoolarapp-a9f3b.appspot.com/PoliticasDatos/SchoolarApp_PoliticaTratamientoDeDatos.pdf" target="_blank" rel="noopener">
+                                Acepto política de tratamiento de datos
+                            </Link>
+                        }
                     />
-
                     <Grid container direction="row" justify="center" alignItems="center">
                         {
                             (!loading)

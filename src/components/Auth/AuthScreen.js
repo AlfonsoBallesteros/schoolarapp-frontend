@@ -73,7 +73,11 @@ export const AuthScreen = () => {
         <Grid container component="main" className={classes.root, classes.background}>
             <CssBaseline/>
             <Grid item xs={false} sm={6} md={8} className={classes.logo} >
+
+                
                 <img src="./assets/img/tecnico-logo.png" />
+
+                
             </Grid>
             <Grid item xs={12} sm={6} md={4} component={Paper} elevation={6} square>
                 <br></br><div className={classes.img}>
