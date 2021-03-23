@@ -18,6 +18,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import { fetchSinToken } from '../../helpers/AuthFetch';
 import Swal from 'sweetalert2';
 import { useHistory } from 'react-router';
+import { Link } from '@material-ui/core';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -64,6 +65,14 @@ export const RegisterScreen = ({types} ) => {
         NumDoc: ''
     })
 
+    const [check, setcheck] = useState({
+        value: false
+    });
+
+    const handleCheck = (e) => {
+        setcheck({ ...check, [e.target.name]: e.target.checked });
+    }
+
 
 
     const handleChange = ({ target }) => {
@@ -77,6 +86,7 @@ export const RegisterScreen = ({types} ) => {
         e.preventDefault();
 
         if (validate()) {
+<<<<<<< HEAD
             setloading(true);
             //enviar person
             const {
@@ -125,29 +135,92 @@ export const RegisterScreen = ({types} ) => {
                         confirmButtonColor: "#219653"
                     })
                 }
+=======
+>>>>>>> d5d3976d3e521306b14b619b4229292e4f8ae6f0
 
-                if(res.ok || res2.ok){
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Estudiante Registrado',
-                        text: "Porfavor verifique su correo para activar su cuenta ",
-                        confirmButtonColor: "#219653"
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            history.replace('/auth')
+            if (check.value) {
+                setloading(true)
+
+                //enviar person
+                const {
+                    firstName: name,
+                    lastName: surname,
+                    SelecDoc: typeId,
+                    NumDoc: documentId
+                } = value;
+
+                try {
+                    const res = await fetchSinToken('people', {
+                        name,
+                        surname,
+                        typeId,
+                        documentId
+                    }, 'POST');
+                    const resJson = await res.json();
+                    if (!res.ok) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: resJson.message,
+                            confirmButtonColor: "#219653"
+                        })
+                    } else {
+                        const { _id } = resJson;
+                        console.log(_id)
+
+                        //user
+                        const { username: login, password, firstName, lastName } = value
+                        const data = {
+                            login,
+                            email: login,
+                            firstName,
+                            lastName,
+                            password,
+                            person: _id
                         }
-                    })
+                        const res2 = await fetchSinToken('register', data, 'POST');
+                        const resJs2 = await res2.json();
 
+                        if (!res2.ok) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: resJs2.message,
+                                confirmButtonColor: "#219653"
+                            })
+                        } else {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Estudiante Registrado',
+                                text: "Porfavor verifique su correo para activar su cuenta ",
+                                confirmButtonColor: "#219653"
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    history.replace('/auth')
+                                }
+                            })
+                        }
+                    }
+                    setloading(false)
+
+                } catch (error) {
+                    console.log(error)
                 }
-                setloading(false)
-
-            } catch (error) {
-                console.log(error)
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: "Por favor Acepto política de tratamiento de datos para crear un usuario",
+                    confirmButtonColor: "#219653"
+                })
             }
+
+
         }
 
     }
 
+    
 
     return (
         <div>
@@ -251,8 +324,19 @@ export const RegisterScreen = ({types} ) => {
                     />
 
                     <FormControlLabel
-                        control={<Checkbox value="remember" color="primary" />}
-                        label="Acepto política de tratamiento de datos"
+                        control={
+                            <Checkbox
+                                checked={check.value}
+                                onChange={handleCheck}
+                                name="value"
+                                color="primary"
+                            />
+                        }
+                        label={
+                            <Link href="https://storage.googleapis.com/schoolarapp-a9f3b.appspot.com/PoliticasDatos/SchoolarApp_PoliticaTratamientoDeDatos.pdf" target="_blank" rel="noopener">
+                                Acepto política de tratamiento de datos
+                            </Link>
+                        }
                     />
                     <Grid container direction="row" justify="center" alignItems="center">
                         {

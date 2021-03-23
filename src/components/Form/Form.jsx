@@ -107,11 +107,11 @@ export const Form = () => {
 
     console.log("handleSubmit", e)
     e.preventDefault();
-    const {error, ...sinError} = state
+    /*const {error, ...sinError} = state
     const result = validate(sinError)
     if(Object.keys(result)){
       setError({error : result})
-    }
+    }*/
 
     
 
