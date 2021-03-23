@@ -64,6 +64,14 @@ export const RegisterScreen = ({ types }) => {
         NumDoc: ''
     })
 
+    const [check, setcheck] = useState({
+        value: false
+    });
+
+    const handleCheck = (e) => {
+        setcheck({ ...check, [e.target.name]: e.target.checked });
+    }
+
 
 
     const handleChange = ({ target }) => {
@@ -77,77 +85,90 @@ export const RegisterScreen = ({ types }) => {
         e.preventDefault();
 
         if (validate()) {
-            setloading(true)
-            //enviar person
-            const {
-                firstName: name,
-                lastName: surname,
-                SelecDoc: typeId,
-                NumDoc: documentId
-            } = value;
 
-            try {
-                const res = await fetchSinToken('people', {
-                    name,
-                    surname,
-                    typeId,
-                    documentId
-                }, 'POST');
-                const resJson = await res.json();
-                if (res.status == 400) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: resJson.message,
-                        confirmButtonColor: "#219653"
-                    })
-                }
-                const { _id } = resJson;
+            if (check.value) {
+                setloading(true)
 
-                //user
-                const { username: login, password, firstName, lastName } = value
-                const data = {
-                    login,
-                    email: login,
-                    firstName,
-                    lastName,
-                    password,
-                    person: _id
-                }
-                const res2 = await fetchSinToken('register', data, 'POST');
-                const resJs2 = await res2.json();
+                //enviar person
+                const {
+                    firstName: name,
+                    lastName: surname,
+                    SelecDoc: typeId,
+                    NumDoc: documentId
+                } = value;
 
-                if (res2.status == 400) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: resJs2.message,
-                        confirmButtonColor: "#219653"
-                    })
-                }
+                try {
+                    const res = await fetchSinToken('people', {
+                        name,
+                        surname,
+                        typeId,
+                        documentId
+                    }, 'POST');
+                    const resJson = await res.json();
+                    if (!res.ok) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: resJson.message,
+                            confirmButtonColor: "#219653"
+                        })
+                    } else {
+                        const { _id } = resJson;
+                        console.log(_id)
 
-                if(res.ok || res2.ok){
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Estudiante Registrado',
-                        text: "Porfavor verifique su correo para activar su cuenta ",
-                        confirmButtonColor: "#219653"
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            history.replace('/auth')
+                        //user
+                        const { username: login, password, firstName, lastName } = value
+                        const data = {
+                            login,
+                            email: login,
+                            firstName,
+                            lastName,
+                            password,
+                            person: _id
                         }
-                    })
+                        const res2 = await fetchSinToken('register', data, 'POST');
+                        const resJs2 = await res2.json();
 
+                        if (!res2.ok) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: resJs2.message,
+                                confirmButtonColor: "#219653"
+                            })
+                        } else {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Estudiante Registrado',
+                                text: "Porfavor verifique su correo para activar su cuenta ",
+                                confirmButtonColor: "#219653"
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    history.replace('/auth')
+                                }
+                            })
+                        }
+                    }
+                    setloading(false)
+
+                } catch (error) {
+                    console.log(error)
                 }
-                setloading(false)
-
-            } catch (error) {
-                console.log(error)
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: "Por favor Acepto política de tratamiento de datos para crear un usuario",
+                    confirmButtonColor: "#219653"
+                })
             }
+
+
         }
 
     }
 
+    
 
     return (
         <div>
@@ -251,9 +272,17 @@ export const RegisterScreen = ({ types }) => {
                     />
 
                     <FormControlLabel
-                        control={<Checkbox value="remember" color="primary" />}
+                        control={
+                            <Checkbox
+                                checked={check.value}
+                                onChange={handleCheck}
+                                name="value"
+                                color="primary"
+                            />
+                        }
                         label="Acepto política de tratamiento de datos"
                     />
+
                     <Grid container direction="row" justify="center" alignItems="center">
                         {
                             (!loading)
