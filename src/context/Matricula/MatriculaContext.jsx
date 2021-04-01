@@ -3,6 +3,7 @@ import React, { createContext, useContext, useState } from 'react';
 const StateMatriculaContext = createContext();
 
 const MatriculaContext = (props) => {
+
     const [value, setInputValue] = useState({
         nombre: '',
         apellidos: '',
@@ -25,21 +26,27 @@ const MatriculaContext = (props) => {
         enfermedad: false,
         discapacidad: false,
         pdf: '',
-        SelectDoc: ''
-    });
-
-    const [secondMatricula, setSecondMatricula] = useState({
+        SelectDoc: '',
         grado: '',
         jornada: '',
-        observaciones: '',
+        observaciones: ''
     })
 
+    const [secondStep, setSecondStep] = useState({
+        grado: '',
+        jornada: '',
+        boletin:'',
+        documento: ''
+    })
+
+
     return (
-        <StateMatriculaContext.Provider value={{value, setInputValue, secondMatricula, setSecondMatricula}}>
+        <StateMatriculaContext.Provider value={{value, setInputValue, secondStep, setSecondStep}}>
             {props.children}
         </StateMatriculaContext.Provider>
     )
 }
+
 
 export const useMatriculaContext = () => useContext(StateMatriculaContext);
 

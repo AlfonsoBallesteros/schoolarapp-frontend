@@ -1,14 +1,7 @@
-
-import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+
 import Container from '@material-ui/core/Container';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
 import { Button } from '@material-ui/core';
 import { useHistory } from 'react-router';
 
@@ -60,10 +53,8 @@ const Matricula = () => {
                                 INICIAR PROCESO
                             </Button>
                         </Grid><br></br>
-
                     </Grid>
                 </div>
-
             </Container>
         </>
     )
