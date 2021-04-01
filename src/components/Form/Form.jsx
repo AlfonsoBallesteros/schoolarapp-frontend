@@ -14,7 +14,6 @@ import { Button } from '@material-ui/core';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import './form.css'
 import { fetchConToken, fetchSinToken } from '../../helpers/AuthFetch';
-import Swal from 'sweetalert2';
 import { Label } from 'recharts';
 import { useMatriculaContext } from './../../context/Matricula/MatriculaContext';
 import { useAuthContext } from './../../context/Auth/AuthContext';
@@ -42,18 +41,20 @@ const useStyles = makeStyles((theme) => ({
 
 export const Form = () => {
 
+  
+
   const state = useMatriculaContext();
-  const { value, setInputValue } = state;
+  const { value, setInputValue } = state; 
   const { Authorization: { user } } = useAuthContext();
   const [listiIdentity, setListIdentity] = useState([]);
   const [listRh, setListRh] = useState([]);
   const [listGenero, setListGenero] = useState([]);
-  const [error, setError]= useState({})
+  const [error, setError] = useState({})
   //didMount
   useEffect(() => {
     console.log(user)
     setInputValue({
-      ...value, nombre: user.firstName, apellidos: user.lastName, tipoIdentificacion: user.SelecDoc, numIdentificación: user.NumDoc,
+      ...value, nombre: user.firstName, apellidos: user.lastName, tipoIdentificacion: user.SelecDoc,
     })
     getListIdentity()
     getListRh()
@@ -72,7 +73,7 @@ export const Form = () => {
     }
   }
 
-  const getListRh = async () =>{
+  const getListRh = async () => {
     try {
       const res = await fetchSinToken('references/6050191c3c492300152684a8');
       const resjson = await res.json();
@@ -83,7 +84,7 @@ export const Form = () => {
     }
   }
 
-  const getListGenero = async () =>{
+  const getListGenero = async () => {
     try {
       const res = await fetchSinToken('references/6050191c3c492300152684d5');
       const resjson = await res.json();
@@ -107,13 +108,7 @@ export const Form = () => {
 
     console.log("handleSubmit", e)
     e.preventDefault();
-    /*const {error, ...sinError} = state
-    const result = validate(sinError)
-    if(Object.keys(result)){
-      setError({error : result})
-    }*/
 
-    
 
     const {
       nombre: name,
@@ -154,8 +149,6 @@ export const Form = () => {
         stratus,
         disease,
         disability
-
-
 
       }, 'POST');
       const resJson = await res.json();
@@ -219,7 +212,6 @@ export const Form = () => {
                     disabled
                     name="numIdentificación"
                     id="numIdentificación"
-                    label="1003801214"
                     variant="outlined"
                     onChange={handleChange}
                     value={value.numIdentificación} />
@@ -257,10 +249,10 @@ export const Form = () => {
                       name="genero"
                       id="genero"
                     >
-                   
-                    {listGenero.map((genero) => (
-                      <MenuItem key={genero._id} value={genero._id}>{` ${genero.name}`}</MenuItem>
-                    ))}
+
+                      {listGenero.map((genero) => (
+                        <MenuItem key={genero._id} value={genero._id}>{` ${genero.name}`}</MenuItem>
+                      ))}
                     </Select>
                   </FormControl>
                 </Grid><br></br>
@@ -358,16 +350,16 @@ export const Form = () => {
                       onChange={handleChange}
                       value={value.rh}
                     >
-                    {listRh.map((rh) => (
-                      <MenuItem key={rh._id} value={rh._id}>{`${rh.value} - ${rh.name}`}</MenuItem>
-                    ))}
+                      {listRh.map((rh) => (
+                        <MenuItem key={rh._id} value={rh._id}>{`${rh.value} - ${rh.name}`}</MenuItem>
+                      ))}
 
                     </Select>
                   </FormControl>
                 </Grid><br></br>
                 <Grid className={classes.gridInput} container item xs={12}>
                   <Grid item xs={6} className={classes.check}>
-                    <p>Enfermedad *</p>
+                    <p>Enfermedad </p>
                     <FormControlLabel
                       control={<Checkbox color="primary" />}
                       label="Si"
@@ -378,7 +370,7 @@ export const Form = () => {
                     />
                   </Grid>
                   <Grid item xs={5}>
-                    <p>Discapacidad *</p>
+                    <p>Discapacidad </p>
                     <FormControlLabel
                       control={<Checkbox color="primary" />}
                       label="Si"
@@ -402,7 +394,7 @@ export const Form = () => {
                         startIcon={<CloudUploadIcon />}
                       >
                         Subir
-                                </Button>
+                      </Button>
                     </Label>
                     <input accept="image/*" className={classes.input} type="file" />
                   </Grid><br></br>

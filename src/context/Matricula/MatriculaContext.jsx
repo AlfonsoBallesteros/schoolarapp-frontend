@@ -7,7 +7,7 @@ const MatriculaContext = (props) => {
         nombre: '',
         apellidos: '',
         tipoIdentificacion: '',
-        numIdentificación: '',
+        numIdentificación: 1003801214,
         fechaNacimiento: '',
         ciudadNacimiento: '',
         genero: '',
@@ -25,11 +25,17 @@ const MatriculaContext = (props) => {
         enfermedad: false,
         discapacidad: false,
         pdf: '',
-        SelectDoc: 20
+        SelectDoc: ''
     });
 
+    const [secondMatricula, setSecondMatricula] = useState({
+        grado: '',
+        jornada: '',
+        observaciones: '',
+    })
+
     return (
-        <StateMatriculaContext.Provider value={{value, setInputValue}}>
+        <StateMatriculaContext.Provider value={{value, setInputValue, secondMatricula, setSecondMatricula}}>
             {props.children}
         </StateMatriculaContext.Provider>
     )

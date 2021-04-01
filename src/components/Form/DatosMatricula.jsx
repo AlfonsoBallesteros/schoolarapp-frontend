@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
@@ -9,6 +9,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import { Button } from '@material-ui/core';
+import { fetchSinToken } from '../../helpers/AuthFetch';
+import { useMatriculaContext } from '../../context/Matricula/MatriculaContext';
+
+
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -20,23 +25,49 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const DatosMatricula = () => {
+ export const DatosMatricula = () => {
 
-    const [value, setInputValue] = useState({});
+    const state = useMatriculaContext();
+    const { secondMatricula, setSecondMatricula } = state;
+    const [listGrades, setListGrades] = useState({});
     const classes = useStyles();
+    
 
-    const handleChange = (event) => {
+    useEffect(() => {
+        getListGrade()
+    }, [])
+    
+
+    const getListGrade = async () => {
+        try {
+          const res = await fetchSinToken('references/6050191c3c492300152684e6');
+          const resjson = await res.json();
+          console.log(resjson)
+          setListGrades(resjson.types)
+        } catch (error) {
+          console.log(error)
+        }
+      }
+
+      const handleChange = (event) => {
         const name = event.target.name;
-        setInputValue({
-            ...value, [name]: event.target.value,
+        setSecondMatricula({
+            ...secondMatricula, [name]: event.target.value,
         });
     };
-
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        
+        const {
+            grado: Grado,
+        } = value;
+        
+    }
     return (
         <Container fixed>
             <h1>PASO 2: Datos del la matrícula</h1>
             <p>Diligencie la información correspondiente a la matrícula en el período actual.</p>
-            <form className={classes.root} noValidate autoComplete="off">
+            <form className={classes.root} noValidate autoComplete="off" onSubmit={handleSubmit}>
                 <div className={classes.root}>
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={4}>
@@ -45,22 +76,14 @@ const DatosMatricula = () => {
                                 <FormControl fullWidth variant="outlined">
                                     <InputLabel>Grado al que aspira cursar *</InputLabel>
                                     <Select
+                                        name="grado"
+                                        label="grado"
                                         onChange={handleChange}
-                                        value={value.tipoIdentificacion}
-                                        onChange="handleChange"
-                                        label="Documento de Identidad"
+                                        value={value.grado}
                                     >
-                                        <MenuItem value={10}>Primero</MenuItem>
-                                        <MenuItem value={20}>Segundo</MenuItem>
-                                        <MenuItem value={30}>Tercero</MenuItem>
-                                        <MenuItem value={30}>Cuarto</MenuItem>
-                                        <MenuItem value={30}>Quinto</MenuItem>
-                                        <MenuItem value={30}>Sexto</MenuItem>
-                                        <MenuItem value={30}>Séptimo</MenuItem>
-                                        <MenuItem value={30}>Octavo</MenuItem>
-                                        <MenuItem value={30}>Noveno</MenuItem>
-                                        <MenuItem value={30}>Décimo</MenuItem>
-                                        <MenuItem value={30}>Once</MenuItem>
+                                    {listGrades.map( (list) =>{
+                                        <MenuItem key={list._id} value={list._id}>{`${list.value} - ${list.name}`}</MenuItem>
+                                    })}
                                     </Select><br></br>
                                 </FormControl>
                                 <FormControl fullWidth variant="outlined">
@@ -72,7 +95,7 @@ const DatosMatricula = () => {
                                         label="Jornada *"
                                     >
                                         <MenuItem value={10}>Mañana</MenuItem>
-                                        <MenuItem value={20}>Tarde</MenuItem>
+
                                     </Select>
                                 </FormControl>
                             </Grid> <br></br>

@@ -19,13 +19,11 @@ const DashboardRouter = () => {
             <DashboardLayout>
                 <Switch>
                     <Route exact path="/dashboard" component={Matricula} />
-                    
                     <Route exact path="/dashboard/new" render={(props) => (
                         <MatriculaContext>
                             <NuevoEstudiante {...props}/>
                         </MatriculaContext>
                     )} />
-                    
                     <Redirect to="/dashboard" />
                 </Switch>
             </DashboardLayout>

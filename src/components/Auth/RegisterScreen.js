@@ -86,57 +86,6 @@ export const RegisterScreen = ({types} ) => {
         e.preventDefault();
 
         if (validate()) {
-<<<<<<< HEAD
-            setloading(true);
-            //enviar person
-            const {
-                firstName: name,
-                lastName: surname,
-                SelecDoc: typeId,
-                NumDoc: documentId
-            } = value;
-
-            try {
-                const res = await fetchSinToken('people', {
-                    name,
-                    surname,
-                    typeId,
-                    documentId
-                }, 'POST');
-                const resJson = await res.json();
-                if (res.status == 400) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: resJson.message,
-                        confirmButtonColor: "#219653"
-                    })
-                }
-                const { _id } = resJson;
-
-                //user
-                const { username: login, password, firstName, lastName } = value
-                const data = {
-                    login,
-                    email: login,
-                    firstName,
-                    lastName,
-                    password,
-                    person: _id
-                }
-                const res2 = await fetchSinToken('register', data, 'POST');
-                const resJs2 = await res2.json();
-
-                if (res2.status == 400) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: resJs2.message,
-                        confirmButtonColor: "#219653"
-                    })
-                }
-=======
->>>>>>> d5d3976d3e521306b14b619b4229292e4f8ae6f0
 
             if (check.value) {
                 setloading(true)
@@ -219,8 +168,6 @@ export const RegisterScreen = ({types} ) => {
         }
 
     }
-
-    
 
     return (
         <div>
