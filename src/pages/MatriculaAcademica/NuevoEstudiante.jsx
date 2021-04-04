@@ -11,6 +11,8 @@ import DatosMatricula from '../../components/Form/DatosMatricula';
 import Swal from 'sweetalert2';
 import MatriculaContext, { useMatriculaContext } from '../../context/Matricula/MatriculaContext';
 import Matricula from './Matricula';
+import { StepThree } from '../../components/Form/StepThree';
+import { StepFour } from '../../components/Form/StepFour';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -37,9 +39,9 @@ function getStepContent(stepIndex) {
     case 1:
       return <DatosMatricula />
     case 2:
-      return 'This is the bit I really care about!';
+      return <StepThree/>
     case 3:
-      return 'This is the bit I really care about!';
+      return <StepFour/>
     default:
       return 'Unknown stepIndex';
   }
@@ -99,9 +101,9 @@ export const NuevoEstudiante = ({ loading }) => {
 
 
   const handleNext = () => {
-    if (validateForm()) {
+    // if (validateForm()) {
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    }
+    // }
   };
 
   useEffect(() => {
