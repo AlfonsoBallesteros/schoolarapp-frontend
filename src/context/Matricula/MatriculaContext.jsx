@@ -8,7 +8,7 @@ const MatriculaContext = (props) => {
         nombre: '',
         apellidos: '',
         tipoIdentificacion: '',
-        numIdentificación: 1003801214,
+        numIdentificación: '',
         fechaNacimiento: '',
         ciudadNacimiento: '',
         genero: '',

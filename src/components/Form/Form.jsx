@@ -14,7 +14,6 @@ import { Button } from '@material-ui/core';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import './form.css'
 import { fetchConToken, fetchSinToken } from '../../helpers/AuthFetch';
-import { Label } from 'recharts';
 import { useMatriculaContext } from './../../context/Matricula/MatriculaContext';
 import { useAuthContext } from './../../context/Auth/AuthContext';
 
@@ -35,26 +34,32 @@ const useStyles = makeStyles((theme) => ({
   },
   check: {
     marginLeft: theme.spacing(3),
-  }
+  },
+  gridInput: {
+    marginRight: theme.spacing(2),
+
+},
+input: {
+    display: 'none',
+},
 }));
 
 
 export const Form = () => {
 
-  
-
   const state = useMatriculaContext();
-  const { value, setInputValue } = state; 
+  const { value, setInputValue } = state;
   const { Authorization: { user } } = useAuthContext();
   const [listiIdentity, setListIdentity] = useState([]);
   const [listRh, setListRh] = useState([]);
   const [listGenero, setListGenero] = useState([]);
-  const [error, setError] = useState({})
+
   //didMount
   useEffect(() => {
     console.log(user)
     setInputValue({
-      ...value, nombre: user.firstName, apellidos: user.lastName, tipoIdentificacion: user.SelecDoc,
+      ...value, nombre: user.firstName, apellidos: user.lastName, 
+      tipoIdentificacion: user.person.typeId, numIdentificación: user.person.documentId
     })
     getListIdentity()
     getListRh()
@@ -100,9 +105,10 @@ export const Form = () => {
   const handleChange = ({ target }) => {
     setInputValue({ ...value, [target.name]: target.value });
   };
-  /* const {nombre, apellidos, tipoIdentificacion, numeroTelefono, numIdentificación, fechaNacimiento, 
-       ciudadNacimiento,genero, numeroTelefono, nuCelular, comuna, barrio, estrato, dirección, ciudadResidencia, nacionalidad,
-       rh, eps, numeroTelefono, enfermedad, Discapacidad} = value */
+
+  const handleUpload = (e) => {
+    setInputValue({...value, [e.target.name]: e.target.files[0]})
+  }
 
   const handleSubmit = async (e) => {
 
@@ -153,8 +159,6 @@ export const Form = () => {
       }, 'POST');
       const resJson = await res.json();
 
-      console.log(resJson)
-
     } catch (error) {
       console.log(error)
     }
@@ -194,6 +198,7 @@ export const Form = () => {
                   <FormControl fullWidth variant="outlined">
                     <InputLabel>Tipo de Documento</InputLabel>
                     <Select
+                      disabled
                       name="tipoIdentificacion"
                       id="tipoIdentificacion"
                       value={10}
@@ -249,7 +254,6 @@ export const Form = () => {
                       name="genero"
                       id="genero"
                     >
-
                       {listGenero.map((genero) => (
                         <MenuItem key={genero._id} value={genero._id}>{` ${genero.name}`}</MenuItem>
                       ))}
@@ -379,25 +383,33 @@ export const Form = () => {
                       onChange={handleChange}
                       value={value.discapacidad}
                     />
+
                   </Grid><br></br>
                   <Grid className={classes.gridInput} item xs={12}>
                     <p>Pdf de documento de identificación *</p>
-                    <Label htmlFor="contained-button-file">
+                    <input
+                      name="pdf"
+                      accept="image/*"
+                      className={classes.input}
+                      id="contained-button-file"
+                      multiple
+                      type="file"
+                      onChange={handleUpload}
+                    />
+                    <label htmlFor="contained-button-file">
                       <Button
+                        startIcon={<CloudUploadIcon />}
                         fullwidth
                         variant="contained"
                         value={value.pdf}
                         name="pdf"
-                        onChange={handleChange}
+                        variant="contained"
                         color="default"
-                        className={classes.button}
-                        startIcon={<CloudUploadIcon />}
-                      >
+                        component="span">
                         Subir
                       </Button>
-                    </Label>
-                    <input accept="image/*" className={classes.input} type="file" />
-                  </Grid><br></br>
+                    </label>
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>

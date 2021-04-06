@@ -9,10 +9,8 @@ import { Form } from './../../components/Form/Form';
 import Container from '@material-ui/core/Container';
 import DatosMatricula from '../../components/Form/DatosMatricula';
 import Swal from 'sweetalert2';
-import MatriculaContext, { useMatriculaContext } from '../../context/Matricula/MatriculaContext';
-import Matricula from './Matricula';
-import { StepThree } from '../../components/Form/StepThree';
-import { StepFour } from '../../components/Form/StepFour';
+import { useMatriculaContext } from '../../context/Matricula/MatriculaContext';
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -52,44 +50,45 @@ export const NuevoEstudiante = ({ loading }) => {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
   const [errors, setErrors] = useState([]);
+  const [secondErrors, setSecondErrors] = useState([]);
   const steps = getSteps();
   const state = useMatriculaContext();
-  const { value: matriculaForm } = state;
+  const { value: matriculaForm, secondStep } = state;
 
 
-  const validateForm = () => {
+  const validateFormOne = () => {
     let isValid = true;
     const errors = [];
     if (!(/^\d+\S{7,20}$/).test(matriculaForm.numIdentificación)) {
-      errors.push("El documento de itentidad no es valido");
+      errors.push("El documento de itentidad no es valido ");
       isValid = false;
     }
     if (matriculaForm.nombre === '') {
-      errors.push("El nombre no es valido");
+      errors.push("El nombre no es valido ");
       isValid = false;
     }
     if (matriculaForm.tipoIdentificacion === '') {
-      errors.push("Debe ingresar tipo de identificación");
+      errors.push("Debe ingresar tipo de identificación ");
       isValid = false;
     }
     if (matriculaForm.ciudadNacimiento=== '') {
-      errors.push("Debe ingresar la ciudad de nacimiento");
+      errors.push("Debe ingresar la ciudad de nacimiento ");
       isValid = false;
     }
     if (matriculaForm.ciudadResidencia=== '') {
-      errors.push("Debe ingresar la ciudad de residencia");
+      errors.push("Debe ingresar la ciudad de residencia ");
       isValid = false;
     }
     if (!(/^\d+\S{7,20}$/).test(matriculaForm.nuCelular)){
-      errors.push("Numero de celular inválido");
+      errors.push("Numero de celular inválido ");
       isValid = false;
     }
     if (matriculaForm.dirección=== '') {
-      errors.push("Debe ingresar una dirección");
+      errors.push("Debe ingresar una dirección ");
       isValid = false;
     }
     if (matriculaForm.estrato=== '') {
-      errors.push("Debe ingresar su estrato");
+      errors.push("Debe ingresar su estrato ");
       isValid = false;
     }
    
@@ -97,14 +96,49 @@ export const NuevoEstudiante = ({ loading }) => {
     return isValid;
   }
 
-  /* const validate = validateForm(); */
+  const ValidateDatosMatricula = () =>{
+
+    let valid = true;
+    const secondErrors = [];
+
+    if (secondStep.boletin === '') {
+      secondErrors.push("Debe adjuntar el boletin");
+      valid = false;
+    }
+    
+    if (secondStep.grado === '') {
+      secondErrors.push("Debe seleccionar grado");
+      valid = false;
+    }
+    if (secondStep.jornada === '') {
+      secondErrors.push("Debe seleccionar jornada");
+      valid = false;
+    }
+    if (secondStep.documento === '') {
+      secondErrors.push("Debe adjuntar el documento");
+      valid = false;
+    }
+    setSecondErrors(secondErrors)
+    return valid;
+  }
+
+  const validForm = () => {
+    if(activeStep === 0){
+      return validateFormOne()
+    }
+    if(activeStep === 1){
+      return ValidateDatosMatricula();
+    }
+  }
 
 
   const handleNext = () => {
-    // if (validateForm()) {
+    if(validForm()) {
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
     // }
   };
+
+}
 
   useEffect(() => {
     if(errors.length > 0){
@@ -116,6 +150,17 @@ export const NuevoEstudiante = ({ loading }) => {
       })
     }
   }, [errors])
+
+  useEffect(() => {
+    if(secondErrors.length > 0){
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: secondErrors,
+        confirmButtonColor: "#219653"
+      })
+    }
+  }, [secondErrors])
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);

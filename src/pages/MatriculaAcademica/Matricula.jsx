@@ -1,12 +1,10 @@
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-
 import Container from '@material-ui/core/Container';
 import { Button } from '@material-ui/core';
 import { useHistory } from 'react-router';
 
-
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     root: {
         flexGrow: 1,
     },
@@ -20,7 +18,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Matricula = () => {
- 
 
    /*  const [value, setInputValue] = useState({}); */
     const classes = useStyles();
@@ -30,6 +27,10 @@ const Matricula = () => {
     const handleNew = () => {
         history.replace('/dashboard/new')
     }
+    const handleState = () =>{
+        history.replace('/dashboard/state')
+    }
+
     return (
         <>
             <Container fixed>
@@ -49,8 +50,8 @@ const Matricula = () => {
                         <Grid item xs={12} sm={6} className={classes.img}>
                             <img src="./assets/img/icon2.png" />
                             <h3>Ver estado de la matricula</h3>
-                            <Button variant="contained" color="primary">
-                                INICIAR PROCESO
+                            <Button variant="contained" color="primary" onClick={handleState}>
+                                VER ESTADO
                             </Button>
                         </Grid><br></br>
                     </Grid>

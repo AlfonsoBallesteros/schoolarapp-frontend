@@ -11,6 +11,8 @@ import InputLabel from '@material-ui/core/InputLabel';
 import { Button } from '@material-ui/core';
 import { fetchSinToken } from '../../helpers/AuthFetch';
 import { useMatriculaContext } from './../../context/Matricula/MatriculaContext';
+import useForm from './useForm';
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -34,15 +36,14 @@ export const DatosMatricula = () => {
     const classes = useStyles();
     const state = useMatriculaContext();
     const { secondStep, setSecondStep } = state;
-    console.log(state);
-
+    const { register, errors } = useForm();
+     
 
     useEffect(() => {
         getListGrade();
         getListJornada();
+
     }, [])
-
-
 
     const getListGrade = async () => {
         try {
@@ -68,12 +69,20 @@ export const DatosMatricula = () => {
     };
 
     const handleChange = ({ target }) => {
-        setSecondStep({ ...secondStep, [target.name]: target.value });
-
+        
+            setSecondStep({ ...secondStep, [target.name]: target.value });
+        
     };
+
     const handleSubmit = (e) => {
-        e.preventDefault();
+        e.preventDefault(); 
     }
+
+    const handleUpload = (e) => {
+        console.log("upload" ,e)
+        setSecondStep({...secondStep, [e.target.name]: e.target.files[0]})
+      }
+ 
     return (
         <Container fixed>
             <h1>PASO 2: Datos del la matrícula</h1>
@@ -91,7 +100,7 @@ export const DatosMatricula = () => {
                                         id="grado"
                                         label="grado"
                                         onChange={handleChange}
-                                        value={secondStep.grado}
+                                        value={secondStep.grado || ''}
                                     >
                                         {listGrades.map((list) => (
                                             <MenuItem key="list" value={list._id} > {`${list.value} - ${list.name}`}</MenuItem>
@@ -119,7 +128,7 @@ export const DatosMatricula = () => {
                                     id="outlined-basic"
                                     label="2021"
                                     variant="outlined"
-                                    onChange="handleChange"
+                                    
                                 />
                             </Grid><br></br>
                         </Grid>
@@ -132,15 +141,15 @@ export const DatosMatricula = () => {
                                     id="contained-button-file"
                                     multiple
                                     type="file"
+                                    onChange={handleUpload}
+                                    name="boletin"
                                 />
                                 <label htmlFor="contained-button-file">
-                                 <Button
+                                    <Button
                                         startIcon={<CloudUploadIcon />}
                                         fullwidth
                                         variant="contained"
-                                        value={secondStep.documento}
-                                        name="documento"
-                                        onChange={handleChange}
+                                        value={secondStep.documento}  
                                         variant="contained"
                                         color="default"
                                         component="span">
@@ -156,6 +165,8 @@ export const DatosMatricula = () => {
                                     id="contained-button-file"
                                     multiple
                                     type="file"
+                                    name="documento"
+                                    onChange={handleUpload}
                                 />
                                 <label htmlFor="contained-button-file">
                                     <Button
@@ -163,8 +174,7 @@ export const DatosMatricula = () => {
                                         fullwidth
                                         variant="contained"
                                         value={secondStep.documento}
-                                        name="documento"
-                                        onChange={handleChange}
+                                       
                                         variant="contained"
                                         color="default"
                                         component="span">
